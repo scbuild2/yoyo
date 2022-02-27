@@ -688,7 +688,7 @@ exit 0" >> /etc/rc.local
 install_done()
 {
   clear
-  echo "OPENVPN SERVER FIRENET"
+  echo "OPENVPN SERVER SCBUILD"
   echo "IP : $(curl -s https://api.ipify.org)"
   echo "OPENVPN TCP port : 1194"
   echo "OPENVPN UDP port : 53"
